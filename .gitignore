@@ -18,6 +18,9 @@ bld/
 [Bb]in/
 [Oo]bj/
 
+scriptcs_packages/
+scriptcs_packages.config
+
 # Roslyn cache directories
 *.ide/
 
