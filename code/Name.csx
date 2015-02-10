@@ -1,5 +1,4 @@
-﻿#load "IName.csx"
-
+﻿
 public class Name : IName
 {
     public string FirstName { get; set; }

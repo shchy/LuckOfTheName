@@ -1,5 +1,4 @@
-﻿#load "ILuckView.csx"
-
+﻿
 public class LuckView : ILuckView
 {
     public string View(ILuckResult<Luck> fiveLuck)

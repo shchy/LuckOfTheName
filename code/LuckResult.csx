@@ -1,5 +1,4 @@
-﻿#load "ILuckResult.csx"
-
+﻿
 public class LuckResult<T> : ILuckResult<T>
 {
 

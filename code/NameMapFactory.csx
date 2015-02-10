@@ -1,5 +1,4 @@
-﻿#load "INameMapFactory.csx"
-
+﻿
 public class NameMapFactory : INameMapFactory
 {
     public IDictionary<int, IEnumerable<char>> MakeKakuMap()

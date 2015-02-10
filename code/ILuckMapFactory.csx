@@ -1,5 +1,4 @@
-﻿
-public interface ILuckMapFactory
+﻿public interface ILuckMapFactory
 {
     IDictionary<int, Luck> Make();
 }

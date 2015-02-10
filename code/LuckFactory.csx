@@ -1,5 +1,4 @@
-﻿#load "ILuckFactory.csx"
-
+﻿
 public class LuckFactory : ILuckFactory
 {
     private IDictionary<int, Luck> luckMap;

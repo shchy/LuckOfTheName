@@ -1,5 +1,4 @@
-﻿#load "INameMapFactory.csx"
-
+﻿
 public class NameMapFactoryCached : INameMapFactory
 {
     private Lazy<IDictionary<int, IEnumerable<char>>> lazyValue;

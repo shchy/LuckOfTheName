@@ -1,5 +1,4 @@
-﻿#load "INameArrayFactory.csx"
-
+﻿
 public class NameArrayFactory : INameArrayFactory
 {
     private INameMapFactory nameMapFactory;

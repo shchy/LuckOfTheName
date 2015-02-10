@@ -1,5 +1,4 @@
-﻿#load "IKakuFactory.csx"
-
+﻿
 public class KakuFactory : IKakuFactory
 {
     private INameMapFactory nameMapFactory;
