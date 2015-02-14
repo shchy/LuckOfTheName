@@ -20,6 +20,14 @@
 #load "code/NameMapFactoryCached.csx"
 
 
+var lastNameArg = Env.ScriptArgs[0];
+var _badCount = 0;
+var isInBadCount = 
+    from m in Env.ScriptArgs.ToMaybe()
+    where m.Count() > 1
+    let a = m[1]
+    where int.TryParse(a, out _badCount)
+    select Fn.New((int bc) => bc <= _badCount);
 
 var nameMapFactory =
         new NameMapFactoryCached(
@@ -37,11 +45,10 @@ var sampleList =
     let sample = a.Value.First()
     select new { a.Key, sample };
  
-var test = "横田";
+var test = lastNameArg;
 var xs =
     from a in sampleList
     from b in sampleList
-    where b.Key != 1
     let firstname = a.sample.ToString() + b.sample.ToString()
     let lastName = test
     let name = nameFactory.Make(firstname, lastName)
@@ -49,20 +56,9 @@ var xs =
     where arrayLuck != Luck.Bad
     let kaku = kakuFactory.Make(name)
     let lucks = fiveLuckFactory.Make(kaku)
-    //let isNotBad =
-    //    lucks.Jin != Luck.Bad
-    //    && lucks.Ti != Luck.Bad
-    //    && lucks.Gai != Luck.Bad
-    //    && lucks.Sou != Luck.Bad
-    //    && lucks.Katei != Luck.Bad
-    //    && lucks.Syakai != Luck.Bad
-    //    && lucks.Nai01 != Luck.Bad
-    //    && lucks.Nai02 != Luck.Bad
-    //where isNotBad
     let badCount = lucks.ToArray().Count(x=>x== Luck.Bad)
-    where badCount == 2
+    where isInBadCount.Select(f=> f(badCount)).Return(true)
     let sum = lucks.ToArray().Sum(x => (int)x)
-    //where sum > 13
     orderby sum descending
     select new
     {
@@ -104,26 +100,6 @@ Write("result.txt", w =>
             //names.ForEach(w.WriteLine);
         }
     });
-Write("list.txt", w =>
-{
-    foreach (var item in xs)
-    {
-        w.WriteLine("-----------------------------------");
-        w.WriteLine(item.sum);
-        w.WriteLine(fiveLuckView.View(item.lucks));
- 
-        var names =
-            from a in nameMapFactory.MakeKakuMap()
-            from b in nameMapFactory.MakeKakuMap()
-            where a.Key == item.name00
-            where b.Key == item.name01
-            from v in a.Value
-            from v2 in b.Value
-            select v.ToString() + v2.ToString();
- 
-        names.ForEach(w.WriteLine);
-    }
-});
  
 void Write(string filename, Action<StreamWriter> write)
 {
