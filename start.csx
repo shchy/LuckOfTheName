@@ -16,7 +16,7 @@
 #load "code/INameArrayFactory.csx"
 #load "code/NameArrayFactory.csx"
 #load "code/INameMapFactory.csx"
-#load "code/NameMapFactory_.csx"
+#load "code/NameMapFactory.csx"
 #load "code/NameMapFactoryCached.csx"
 
 

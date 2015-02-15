@@ -17,7 +17,7 @@ public class KakuFactory : IKakuFactory
         r.Ti = name.FirstName.Select(ToKakuCount).Sum();
         r.Sou = r.Ten + r.Ti;
         r.Gai = r.Sou - r.Jin;
-        r.Katei = r.Jin + name.FirstName.Skip(1).Select(ToKakuCount).Sum();
+        r.Katei = r.Jin + (r.Ti - ToKakuCount(name.FirstName.First()));//name.FirstName.Skip(1).Select(ToKakuCount).Sum();
         r.Syakai = r.Jin + name.LastName.Reverse().Skip(1).Select(ToKakuCount).Sum();
         r.Nai01 = ToKakuCount(name.FirstName.First()) + ToKakuCount(name.LastName.First());
         r.Nai02 = r.Sou - r.Nai01;
