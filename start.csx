@@ -16,10 +16,11 @@
 #load "code/INameArrayFactory.csx"
 #load "code/NameArrayFactory.csx"
 #load "code/INameMapFactory.csx"
-#load "code/NameMapFactory.csx"
+#load "code/NameMapFactory_.csx"
 #load "code/NameMapFactoryCached.csx"
 
 
+// args
 var lastNameArg = Env.ScriptArgs[0];
 var _badCount = 0;
 var isInBadCount = 
@@ -28,6 +29,16 @@ var isInBadCount =
     let a = m[1]
     where int.TryParse(a, out _badCount)
     select Fn.New((int bc) => bc <= _badCount);
+var _rank = 0;
+var isInRank =
+    from m in Env.ScriptArgs.ToMaybe()
+    where m.Count() > 2
+    let a = m[2]
+    where int.TryParse(a, out _rank)
+    select Fn.New((int r) => r >= _rank);
+
+
+
 
 var nameMapFactory =
         new NameMapFactoryCached(
@@ -45,12 +56,11 @@ var sampleList =
     let sample = a.Value.First()
     select new { a.Key, sample };
  
-var test = lastNameArg;
 var xs =
     from a in sampleList
     from b in sampleList
     let firstname = a.sample.ToString() + b.sample.ToString()
-    let lastName = test
+    let lastName = lastNameArg
     let name = nameFactory.Make(firstname, lastName)
     let arrayLuck = nameArrayFactory.Make(firstname, lastName)
     where arrayLuck != Luck.Bad
@@ -59,6 +69,7 @@ var xs =
     let badCount = lucks.ToArray().Count(x=>x== Luck.Bad)
     where isInBadCount.Select(f=> f(badCount)).Return(true)
     let sum = lucks.ToArray().Sum(x => (int)x)
+    where isInRank.Select(f => f(sum)).Return(true)
     orderby sum descending
     select new
     {
@@ -76,7 +87,9 @@ Write("result.txt", w =>
             w.WriteLine("-----------------------------------");
             w.WriteLine(item.sum);
             w.WriteLine(fiveLuckView.View(item.lucks));
- 
+            w.WriteLine("{0} {1}", item.name00, item.name01);
+            
+
             var n00 =
                 from a in nameMapFactory.MakeKakuMap()
                 where a.Key == item.name00
@@ -89,15 +102,19 @@ Write("result.txt", w =>
                 from v in a.Value
                 select v;
  
-            var count = Math.Max(n00.Count(), n01.Count());
-            for (int i = 0; i < count; i++)
-            {
-                var x00 = n00.ElementAtOrDefault(i);
-                var x01 = n01.ElementAtOrDefault(i);
-                w.WriteLine("{0} {1} {2}",test, x00, x01);
-            }
+            //var count = Math.Max(n00.Count(), n01.Count());
+            //for (int i = 0; i < count; i++)
+            //{
+            //    var x00 = n00.ElementAtOrDefault(i).ToMaybe().Where(c=>c!=0).Return(' ');
+            //    var x01 = n01.ElementAtOrDefault(i).ToMaybe().Where(c=>c!=0).Return(' ');
+            //    w.WriteLine("{0} {1} {2}",test, x00, x01);
+            //}
  
-            //names.ForEach(w.WriteLine);
+            var names =
+                from x in n00
+                from y in n01
+                select lastNameArg + " " + x.ToString() + y.ToString();
+            names.ForEach(w.WriteLine);
         }
     });
  
